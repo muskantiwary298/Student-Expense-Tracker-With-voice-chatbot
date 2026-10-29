@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendSmart | Student Expense Tracker</title>
+  <link rel="stylesheet" href="Studentexpensetrackerwithvoicechatbot.css">
+  <script src="Studentexpensetrackerwithvoicechatbot.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span>✦</span> SpendSmart</div>
+    <p class="side-label">WORKSPACE</p>
+    <a href="#dashboard" class="nav active">▦ &nbsp; Dashboard</a>
+    <a href="#transactions" class="nav">↔ &nbsp; Transactions</a>
+    <a href="#assistant" class="nav">🎙 &nbsp; Voice Assistant</a>
+    <div class="sidebar-bottom">
+      <div class="avatar">S</div>
+      <div><strong>Student Account</strong><small>Personal finance</small></div>
+    </div>
+  </aside>
+
+  <main class="main" id="dashboard">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">YOUR PERSONAL FINANCE SPACE</p>
+        <h1>Student Dashboard 👋</h1>
+        <p class="muted">Manage your money. Build better habits.</p>
+      </div>
+      <button class="primary" id="openExpense">+ Add Expense</button>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p>Total Available Balance</p>
+        <h2 id="balance">₹0.00</h2>
+        <span class="hero-note">Your money, your control ✨</span>
+      </div>
+      <div class="hero-icon">₹</div>
+    </section>
+
+    <section class="stats">
+      <article class="stat-card">
+        <div class="stat-icon green">↙</div>
+        <p>Total Income</p>
+        <h2 id="income">₹0</h2>
+        <small>Money received</small>
+      </article>
+      <article class="stat-card">
+        <div class="stat-icon red">↗</div>
+        <p>Total Expenses</p>
+        <h2 id="expenses">₹0</h2>
+        <small>Money spent</small>
+      </article>
+      <article class="stat-card">
+        <div class="stat-icon purple">◈</div>
+        <p>Net Savings</p>
+        <h2 id="savings">₹0</h2>
+        <small>Income minus expenses</small>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel" id="transactions">
+        <div class="panel-heading">
+          <div>
+            <h3>Recent Transactions</h3>
+            <p class="muted">Your latest money activity</p>
+          </div>
+          <button class="text-button" id="clearAll">Clear all</button>
+        </div>
+        <div class="transaction-list" id="transactionList">
+          <div class="empty">No transactions yet. Add your first entry!</div>
+        </div>
+      </article>
+
+      <article class="panel budget-panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Monthly Budget</h3>
+            <p class="muted">Set your spending limit</p>
+          </div>
+        </div>
+        <form id="budgetForm" class="budget-form">
+          <label for="budgetInput">Budget amount (₹)</label>
+          <div class="inline-form">
+            <input type="number" id="budgetInput" min="1" step="0.01"
+              placeholder="e.g. 5000" required>
+            <button class="primary" type="submit">Save</button>
+          </div>
+        </form>
+        <div class="budget-numbers">
+          <span>Spent</span><strong id="budgetSpent">₹0</strong>
+        </div>
+        <div class="progress-track"><div id="budgetProgress"></div></div>
+        <p class="muted" id="budgetMessage">Set a budget to start tracking.</p>
+        <div class="divider"></div>
+        <h4>Spending by Category</h4>
+        <div id="categoryChart" class="category-chart">
+          <p class="empty">Your spending chart will appear here.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel assistant-panel" id="assistant">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">YOUR SMART MONEY COMPANION</p>
+          <h3>Voice Assistant</h3>
+          <p class="muted">Talk to your tracker or type a command.</p>
+        </div>
+        <div class="bot-icon">✦</div>
+      </div>
+
+      <div class="chat-window" id="chatWindow" aria-live="polite">
+        <div class="message bot-message">
+          Hi! I'm your finance assistant. Try saying
+          "Add expense 100 rupees for food" or ask
+          "What is my balance?"
+        </div>
+      </div>
+
+      <div class="chat-controls">
+        <input id="chatInput" type="text"
+          placeholder="Type: Add expense 100 for food..."
+          aria-label="Chat command">
+        <button class="primary" id="sendChat">Send</button>
+        <button class="mic-button" id="micButton" title="Start voice recognition"
+          aria-label="Start voice recognition">🎙</button>
+      </div>
+      <p class="muted voice-status" id="voiceStatus">
+        Voice recognition works in supported browsers with microphone access.
+      </p>
+      <div class="quick-commands">
+        <button class="chip" data-command="What is my balance?">Check balance</button>
+        <button class="chip" data-command="How much did I spend?">Total spending</button>
+        <button class="chip" data-command="Show my savings">My savings</button>
+      </div>
+    </section>
+
+    <footer>SpendSmart © 2026 · Built for smarter student spending</footer>
+  </main>
+
+  <dialog id="expenseDialog">
+    <form id="transactionForm">
+      <div class="panel-heading">
+        <h3>Add a Transaction</h3>
+        <button type="button" id="closeDialog" class="close-button"
+          aria-label="Close">✕</button>
+      </div>
+
+      <label for="type">Transaction Type</label>
+      <select id="type" required>
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+
+      <label for="title">Description</label>
+      <input id="title" maxlength="80" placeholder="e.g. Lunch at college" required>
+
+      <label for="amount">Amount (₹)</label>
+      <input id="amount" type="number" min="0.01" step="0.01"
+        placeholder="e.g. 150" required>
+
+      <label for="category">Category</label>
+      <select id="category" required>
+        <option>Food</option>
+        <option>Travel</option>
+        <option>Shopping</option>
+        <option>Education</option>
+        <option>Hostel</option>
+        <option>Entertainment</option>
+        <option>Health</option>
+        <option>Other</option>
+      </select>
+
+      <label for="date">Date</label>
+      <input id="date" type="date" required>
+
+      <button class="primary full-button" type="submit">Save Transaction</button>
+    </form>
+  </dialog>
+</body>
+</html>
